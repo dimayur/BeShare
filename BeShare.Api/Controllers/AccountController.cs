@@ -58,13 +58,11 @@ namespace BeShare.Api.Controllers
                 return Unauthorized("Невірне ім'я користувача або пароль");
             }
 
-            // Генерація токена JWT
             var token = GenerateJwtToken(user);
 
             return Ok(new { Token = token });
         }
 
-        // Методи хешування та перевірки пароля
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
@@ -80,7 +78,6 @@ namespace BeShare.Api.Controllers
             return savedPasswordHash.Equals(hashedEnteredPassword);
         }
 
-        // Генерація токена JWT
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -92,7 +89,7 @@ namespace BeShare.Api.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Username)
                 }),
-                Expires = DateTime.UtcNow.AddHours(4), // Токен діє 4 години
+                Expires = DateTime.UtcNow.AddHours(4), // ПОМІНЯЙ ВСЕ НАЗАД 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
