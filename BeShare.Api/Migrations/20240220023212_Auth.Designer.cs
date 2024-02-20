@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeShare.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240220015323_Auth")]
+    [Migration("20240220023212_Auth")]
     partial class Auth
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace BeShare.Api.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
