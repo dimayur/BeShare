@@ -23,16 +23,28 @@ namespace BeShare.Api.Controllers
             _jwtSecret = configuration["Jwt:Secret"];
         }
 
+        [HttpPost("authorize-callback")]
+        public IActionResult AuthorizeCallback([FromBody] string token)
+        {
+            if (!string.IsNullOrEmpty(token))
+            {
+                // Виконайте необхідні дії з отриманим токеном або інформацією, наприклад, збережіть його в сеансі користувача або в базі даних
+
+                HttpContext.Session.SetString("AccessToken", token);
+                return Ok("Авторизація успішна!");
+            }
+
+            return BadRequest("Отримано невірний токен або callback URL.");
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto model)
         {
-            // Перевірка унікальності імені користувача
             if (await _context.Users.AnyAsync(x => x.Username == model.Username))
             {
                 return Conflict("Це ім'я користувача вже зайняте");
             }
 
-            // Хешування пароля
             var passwordHash = HashPassword(model.Password);
 
             var user = new User
