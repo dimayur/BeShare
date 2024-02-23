@@ -12,13 +12,13 @@ namespace BeShare.App
     public partial class StartWindow : Window
     {
         private readonly string AuthorizationUrl = "http://localhost:3000/login";
-        string applicationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BeShare.Apps.exe");
+        string applicationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BeShare.App.exe");
 
         public StartWindow()
         {
             InitializeComponent();
 
-            RegisterUrlSchemeHandler("beshare.apps", applicationPath);
+            RegisterUrlSchemeHandler("beshare.app", applicationPath);
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -33,61 +33,59 @@ namespace BeShare.App
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Помилка відкриття URL: {ex.Message}", "Помилка");
+                MessageBox.Show($"Помилка: {ex.Message}", "Помилка");
             }
         }
 
         private void Frame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
-            MessageBox.Show($"Navigating to: {e.Uri}");
             Uri uri = e.Uri;
-            if (uri != null && uri.Scheme == "beshare.apps" && uri.LocalPath == "/callback")
+            if (uri != null && uri.Scheme == "beshare.app" && uri.LocalPath == "/callback")
             {
                 try
                 {
                     string token = HttpUtility.ParseQueryString(uri.Query).Get("token");
-                    HandleAuthorizationCallback(token);
+                    Callback(token);
                     e.Cancel = true;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Помилка обробки авторизації: {ex.Message}", "Помилка");
+                    MessageBox.Show($"Помилка: {ex.Message}", "Помилка");
                 }
             }
         }
 
-        private void HandleAuthorizationCallback(string token)
+        private void Callback(string token)
         {
             if (!string.IsNullOrEmpty(token))
             {
                 try
                 {
-                    SaveTokenLocally(token);
+                    SaveToken(token);
                     MessageBox.Show("Авторизація успішна!");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Помилка збереження токену: {ex.Message}", "Помилка");
+                    MessageBox.Show($"Помилка: {ex.Message}", "Помилка");
                 }
             }
             else
             {
-                MessageBox.Show("Отримано невірний токен або callback URL.", "Помилка авторизації");
+                MessageBox.Show("Невірний токен", "Помилка авторизації");
             }
         }
 
-        private void SaveTokenLocally(string token)
+        private void SaveToken(string token)
         {
-            MessageBox.Show("SaveTokenLocally");
             try
             {
-                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "YourApp", "token.txt");
+                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "beshare.app", "token.txt");
                 Directory.CreateDirectory(Path.GetDirectoryName(filePath));
                 File.WriteAllText(filePath, token, Encoding.UTF8);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Помилка збереження токену: {ex.Message}");
+                throw new Exception($"Помилка: {ex.Message}");
             }
         }
 
@@ -118,7 +116,7 @@ namespace BeShare.App
             }
             catch (Exception ex)
             {
-                throw new Exception($"Помилка реєстрації обробника URL-схеми: {ex.Message}");
+                throw new Exception($"Помилка: {ex.Message}");
             }
         }
 

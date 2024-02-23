@@ -18,7 +18,7 @@ const LoginForm = () => {
             console.log(response.data);
             console.log("Авторизація успішна!");
 
-            const callbackUrl = 'beshare.apps://callback?token=' + token;
+            const callbackUrl = 'beshare.app://callback?token=' + token;
             window.location.href = callbackUrl;
             console.log(callbackUrl);
 
