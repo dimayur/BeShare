@@ -14,14 +14,12 @@ const LoginForm = () => {
                 password: password,
             });
             const token = response.data.token;
-            localStorage.setItem('token', token);
-            console.log(response.data);
-            console.log("Авторизація успішна!");
-
             const callbackUrl = 'beshare.app://callback?token=' + token;
             window.location.href = callbackUrl;
             console.log(callbackUrl);
-
+            //localStorage.setItem('token', token);
+            //console.log(response.data);
+            //console.log("Авторизація успішна!");
         } catch (error) {
             setError(error.response.data);
         }

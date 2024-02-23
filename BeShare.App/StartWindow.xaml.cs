@@ -4,11 +4,15 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Windows;
-using System.Windows.Navigation;
 using Microsoft.Win32;
 
 namespace BeShare.App
 {
+    public static class AppArgs
+    {
+        public static string[] Args { get; set; }
+    }
+
     public partial class StartWindow : Window
     {
         private readonly string AuthorizationUrl = "http://localhost:3000/login";
@@ -19,6 +23,11 @@ namespace BeShare.App
             InitializeComponent();
 
             RegisterUrlSchemeHandler("beshare.app", applicationPath);
+            if (AppArgs.Args != null && AppArgs.Args.Length > 0)
+            {
+                string url = AppArgs.Args[0];
+                ProcessUrl(url);
+            }
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -37,21 +46,17 @@ namespace BeShare.App
             }
         }
 
-        private void Frame_Navigating(object sender, NavigatingCancelEventArgs e)
+        private void ProcessUrl(string url)
         {
-            Uri uri = e.Uri;
-            if (uri != null && uri.Scheme == "beshare.app" && uri.LocalPath == "/callback")
+            try
             {
-                try
-                {
-                    string token = HttpUtility.ParseQueryString(uri.Query).Get("token");
-                    Callback(token);
-                    e.Cancel = true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Помилка: {ex.Message}", "Помилка");
-                }
+                Uri uri = new Uri(url);
+                string token = HttpUtility.ParseQueryString(uri.Query).Get("token");
+                Callback(token);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Помилка: {ex.Message}", "Помилка");
             }
         }
 
@@ -62,7 +67,9 @@ namespace BeShare.App
                 try
                 {
                     SaveToken(token);
-                    MessageBox.Show("Авторизація успішна!");
+                    MainWindow mainWindow = new MainWindow();
+                    mainWindow.Show();
+                    this.Close();
                 }
                 catch (Exception ex)
                 {
@@ -71,7 +78,7 @@ namespace BeShare.App
             }
             else
             {
-                MessageBox.Show("Невірний токен", "Помилка авторизації");
+                MessageBox.Show("[#]Невірний токен", "Помилка авторизації");
             }
         }
 
@@ -82,10 +89,11 @@ namespace BeShare.App
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "beshare.app", "token.txt");
                 Directory.CreateDirectory(Path.GetDirectoryName(filePath));
                 File.WriteAllText(filePath, token, Encoding.UTF8);
+                MessageBox.Show("[#]Токен збережено!");
             }
             catch (Exception ex)
             {
-                throw new Exception($"Помилка: {ex.Message}");
+                throw new Exception($"Помилка збереження токена: {ex.Message}");
             }
         }
 
@@ -119,6 +127,5 @@ namespace BeShare.App
                 throw new Exception($"Помилка: {ex.Message}");
             }
         }
-
     }
 }

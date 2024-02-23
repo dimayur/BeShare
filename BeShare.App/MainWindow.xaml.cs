@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using Microsoft.Win32;
+using Wpf.Ui.Appearance;
 
 namespace BeShare.App
 {    public partial class MainWindow : Window
@@ -9,6 +10,7 @@ namespace BeShare.App
         public MainWindow()
         {
             InitializeComponent();
+            ApplicationThemeManager.Apply(this);
         }
         private void CreateArchive_Click(object sender, RoutedEventArgs e)
         {
