@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using BeShare.Api.Models;
 
 namespace BeShare.Api.Controllers
 {
@@ -28,16 +29,50 @@ namespace BeShare.Api.Controllers
             if (user == null)
                 return Unauthorized("Недійсний токен доступу");
 
-            var fileName = Guid.NewGuid().ToString(); // Назва
-            var fileType = Path.GetExtension(file.FileName); // Тип файлу
+            var fileName = Guid.NewGuid().ToString();
+            var fileType = Path.GetExtension(file.FileName);
             var fullFileName = fileName + fileType;
             var filePath = Path.Combine("userfiles", fullFileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);            }
+                await file.CopyToAsync(stream);
+            }
+            string formattedDate = DateTime.Now.ToString("dd.MM.yyyy");
+
+            var uploadedFile = new UploadedFile
+            {
+                UserId = user.Id,
+                FileName = fullFileName,
+                FileType = fileType,
+                UploadDate = formattedDate
+            };
+
+            _context.UploadedFiles.Add(uploadedFile);
+            await _context.SaveChangesAsync();
 
             return Ok("Файл успішно завантажено");
         }
+        [HttpPost("api/getfiles")]
+        public async Task<IActionResult> GetFilesForUser(string token)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
+            if (user == null)
+                return Unauthorized("Недійсний токен доступу");
+
+            var files = await _context.UploadedFiles
+                .Where(f => f.UserId == user.Id)
+                .Select(f => new
+                {
+                    f.Id,
+                    f.FileName,
+                    f.FileType,
+                    f.UploadDate
+                })
+                .ToListAsync();
+
+            return Ok(files);
+        }
+
     }
 }
