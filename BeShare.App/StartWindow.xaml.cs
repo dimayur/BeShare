@@ -39,6 +39,7 @@ namespace BeShare.App
                     FileName = AuthorizationUrl,
                     UseShellExecute = true
                 });
+                this.Close();
             }
             catch (Exception ex)
             {

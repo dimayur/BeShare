@@ -57,6 +57,11 @@ namespace BeShare.Api.Controllers
             }
 
             var token = GenerateJwtToken(user);
+            user.Token = token;
+
+            // Оновлюємо об'єкт користувача в базі даних
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
 
             return Ok(new { Token = token });
         }
@@ -94,18 +99,5 @@ namespace BeShare.Api.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-    }
-
-    public class RegisterDto
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-    }
-
-    public class LoginDto
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
     }
 }
