@@ -18,8 +18,29 @@ namespace BeShare.Api.Controllers
         {
             _context = context;
         }
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteFile(int fileId, string token)
+        {
+            var user = await _context.Users.Where(u => u.Token == token).FirstOrDefaultAsync();
+            if (user == null)
+                return Unauthorized("Недійсний токен доступу");
 
-        [HttpPost("api/upload")]
+            var file = await _context.UploadedFiles.Where(f => f.Id == fileId && f.UserId == user.Id).FirstOrDefaultAsync();
+
+            if (file == null)
+                return NotFound("Файл не знайдено або не належить вам");
+
+            _context.UploadedFiles.Remove(file);
+            await _context.SaveChangesAsync();
+            var filePath = Path.Combine("userfiles", file.FileName);
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            return Ok("Файл успішно видалено");
+        }
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(IFormFile file, string token)
         {
             if (file == null || file.Length == 0)
@@ -53,8 +74,8 @@ namespace BeShare.Api.Controllers
 
             return Ok("Файл успішно завантажено");
         }
-        [HttpPost("api/getfiles")]
-        public async Task<IActionResult> GetFilesForUser(string token)
+        [HttpPost("getfiles")]
+        public async Task<IActionResult> GetUserFiles(string token)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
             if (user == null)
@@ -73,6 +94,5 @@ namespace BeShare.Api.Controllers
 
             return Ok(files);
         }
-
     }
 }
