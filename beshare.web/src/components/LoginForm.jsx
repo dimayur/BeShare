@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../css/auth.css';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');
@@ -26,20 +27,28 @@ const LoginForm = () => {
     };
 
     return (
-        <div>
-            <h2>Вхід</h2>
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Ім'я користувача:</label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <div className="app-container">
+            <div className="app-info">
+                <div className="app-menu-r">
+                    <img src="/contnet/img/img.svg" alt=""/>
                 </div>
-                <div>
-                    <label>Пароль:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <div className="app-menu-s">
+                    <h1 className="txt-main">Авторизація</h1>
+                    <div className="inp-help">
+                        <form onSubmit={handleSubmit}>
+                        <div className="inp-info">
+                            <label className="txt-normal">Логін</label>
+                            <input className="inp-grid" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                        </div>
+                        <div className="inp-info">
+                            <label className="txt-normal">Пароль</label>
+                            <input className="inp-grid" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </div>
+                        <button className="btn" type="submit">Увійти</button>
+                        </form>
+                    </div>
                 </div>
-                <button type="submit">Увійти</button>
-            </form>
+            </div>
         </div>
     );
 };

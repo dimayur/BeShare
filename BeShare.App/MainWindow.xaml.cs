@@ -68,5 +68,11 @@ namespace BeShare.App
                 }
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Panel me = new Panel();
+            me.Show();
+        }
     }
 }

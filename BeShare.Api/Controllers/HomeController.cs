@@ -18,7 +18,18 @@ namespace BeShare.Api.Controllers
         {
             _context = context;
         }
+        [HttpPost("api/user/validuser")]
+        public async Task<IActionResult> GetUserName(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                return BadRequest("Токен не отримано");
 
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
+            if (user == null)
+                return NotFound("Користувача не знайдено");
+
+            return Ok(new { UserName = user.Username });
+        }
         [HttpPost("api/upload")]
         public async Task<IActionResult> UploadFile(IFormFile file, string token)
         {

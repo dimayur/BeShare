@@ -23,6 +23,7 @@ namespace BeShare.Api.Controllers
             _jwtSecret = configuration["Jwt:Secret"];
         }
 
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto model)
         {
@@ -59,7 +60,6 @@ namespace BeShare.Api.Controllers
             var token = GenerateJwtToken(user);
             user.Token = token;
 
-            // Оновлюємо об'єкт користувача в базі даних
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
