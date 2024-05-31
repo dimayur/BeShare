@@ -7,6 +7,7 @@ namespace BeShare.Api.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<UploadedFile> UploadedFiles { get; set; }
+        public DbSet<BlackList> BlacklistedFiles { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }

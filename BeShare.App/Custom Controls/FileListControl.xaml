@@ -64,7 +64,7 @@
         </Style>
 
     </UserControl.Resources>
-    <Border Background="Transparent"  Visibility="{Binding Visibility}">
+    <Border Background="Transparent" Visibility="{Binding Visibility}">
         <Border Background="White" BorderThickness="0" CornerRadius="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid>
                 <Grid.RowDefinitions>
@@ -81,14 +81,17 @@
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="15"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Назва" Margin="15" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
-                    <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Тип файлу" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
-                    <TextBlock Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Дата завантаження" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
-                    <TextBlock Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Розмір" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Назва" Margin="15" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Тип файлу" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
+                    <TextBlock Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Дата завантаження" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
+                    <TextBlock Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Розмір" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
                     <Separator Grid.ColumnSpan="5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="#F0F5F8"/>
                 </Grid>
+
+                <!--#region Content-->
                 <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False">
-                    <StackPanel Orientation="Vertical">
+                    <StackPanel x:Name="Deamn" Orientation="Vertical">
+                        <!-- Dynamically generated buttons with table content go here -->
                         <Button Style="{DynamicResource ButtonStyle1}">
                             <Button.Content>
                                 <Grid>
@@ -99,114 +102,17 @@
                                         <ColumnDefinition Width="120"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/assets/folder.png" HorizontalAlignment="Left"/>
+                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/Custom Controls/music.png" HorizontalAlignment="Left"/>
                                         <TextBlock Margin="5,0,0,0" Text="Файл 1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="Bold" Foreground="LightSlateGray"/>
                                     </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                </Grid>
-                            </Button.Content>
-                        </Button>                       
-                        <Button Style="{DynamicResource ButtonStyle1}">
-                            <Button.Content>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/assets/folder.png" HorizontalAlignment="Left"/>
-                                        <TextBlock Margin="5,0,0,0" Text="Файл 2" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="Bold" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
+                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" Foreground="LightSlateGray"/>
+                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" Foreground="LightSlateGray"/>
+                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" Foreground="LightSlateGray"/>
                                 </Grid>
                             </Button.Content>
                         </Button>
-                        <Button Style="{DynamicResource ButtonStyle1}">
-                            <Button.Content>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/assets/folder.png" HorizontalAlignment="Left"/>
-                                        <TextBlock Margin="5,0,0,0" Text="Файл 3" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="Bold" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-                        <Button Style="{DynamicResource ButtonStyle1}">
-                            <Button.Content>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/assets/Video.png" HorizontalAlignment="Left"/>
-                                        <TextBlock Margin="5,0,0,0" Text="Відео" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="Bold" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-                        <Button Style="{DynamicResource ButtonStyle1}">
-                            <Button.Content>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/assets/Video.png" HorizontalAlignment="Left"/>
-                                        <TextBlock Margin="5,0,0,0" Text="Відео" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="Bold" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-                        <Button Style="{DynamicResource ButtonStyle1}">
-                            <Button.Content>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/assets/Music.png" HorizontalAlignment="Left"/>
-                                        <TextBlock Margin="5,0,0,0" Text="Файл музики" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="Bold" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" Foreground="LightSlateGray"/>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-
                     </StackPanel>
                 </ScrollViewer>
-                <!--#endregion-->
             </Grid>
         </Border>
     </Border>

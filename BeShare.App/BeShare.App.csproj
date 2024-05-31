@@ -9,19 +9,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="close.png" />
+    <None Remove="close1.png" />
+    <None Remove="cloud.png" />
     <None Remove="Content\spin.gif" />
+    <None Remove="Custom Controls\music.png" />
+    <None Remove="dropbox.png" />
+    <None Remove="plus.png" />
+    <None Remove="settings.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="close.png" />
     <Resource Include="Content\spin.gif" />
+    <Resource Include="Custom Controls\music.png" />
+    <Resource Include="plus.png" />
+    <Resource Include="settings.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SharpCompress" Version="0.36.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.2" />
     <PackageReference Include="Unnoficial.Microsoft.Expression.Drawing" Version="1.0.0" />
-    <PackageReference Include="WPF-UI" Version="3.0.0" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 

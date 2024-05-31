@@ -1,10 +1,12 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Web;
 using System.Windows;
-using Microsoft.Win32;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using BeShare.App.Method;
+using WpfAnimatedGif;
+
 
 namespace BeShare.App
 {
@@ -15,22 +17,67 @@ namespace BeShare.App
 
     public partial class StartWindow : Window
     {
+        WpfHelper wpf = new WpfHelper();
+        Auth auth = new Auth();
         private readonly string AuthorizationUrl = "http://localhost:3000/login";
         string applicationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BeShare.App.exe");
+
+        private string[] texts = { "Перевірка сервера", "Проводим підключення", "Успішно!" };
+        private int currentIndex = 0;
+        private DispatcherTimer timer;
 
         public StartWindow()
         {
             InitializeComponent();
-
-            RegisterUrlSchemeHandler("beshare.app", applicationPath);
+            LoadGif();
+            CenterWindows();
+            wpf.RegisterProgram("beshare.app", applicationPath);
+            this.SizeToContent = SizeToContent.WidthAndHeight;
+            this.ResizeMode = ResizeMode.NoResize;
             if (AppArgs.Args != null && AppArgs.Args.Length > 0)
             {
                 string url = AppArgs.Args[0];
                 ProcessUrl(url);
             }
-        }
+            
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(3);
+            timer.Tick += Timer_Tick;
+            timer.Start();
 
-        private void Open_Click(object sender, RoutedEventArgs e)
+        }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            // Зміна тексту наступним за списком
+            textBlock.Text = texts[currentIndex];
+            currentIndex = (currentIndex + 1) % texts.Length;
+        }
+        public void CloseWindow()
+        {
+            Application.Current.MainWindow.Close();
+        }
+        private void CenterWindows()
+        {
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = this.Width;
+            double windowHeight = this.Height;
+            this.Left = (screenWidth - windowWidth) / 2;
+            this.Top = (screenHeight - windowHeight) / 2;
+        }
+        private void LoadGif() 
+        {
+            string imagePath = "/BeShare.App;component/Content/spin.gif";
+
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(imagePath, UriKind.Relative);
+            bitmap.EndInit();
+
+            gifImage.Source = bitmap;
+            ImageBehavior.SetAnimatedSource(gifImage, bitmap);
+        }
+        public void AuthStart()
         {
             try
             {
@@ -39,14 +86,13 @@ namespace BeShare.App
                     FileName = AuthorizationUrl,
                     UseShellExecute = true
                 });
-                this.Close();
+                
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Помилка: {ex.Message}", "Помилка");
             }
         }
-
         private void ProcessUrl(string url)
         {
             try
@@ -67,9 +113,9 @@ namespace BeShare.App
             {
                 try
                 {
-                    SaveToken(token);
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
+                    auth.SaveToken(token);
+                    Panel panel = new Panel();
+                    panel.Show();
                     this.Close();
                 }
                 catch (Exception ex)
@@ -82,51 +128,9 @@ namespace BeShare.App
                 MessageBox.Show("[#]Невірний токен", "Помилка авторизації");
             }
         }
-
-        private void SaveToken(string token)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "beshare.app", "token.txt");
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                File.WriteAllText(filePath, token, Encoding.UTF8);
-                MessageBox.Show("[#]Токен збережено!");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Помилка збереження токена: {ex.Message}");
-            }
-        }
-
-        private void RegisterUrlSchemeHandler(string scheme, string applicationPath)
-        {
-            try
-            {
-                RegistryKey key = Registry.ClassesRoot.CreateSubKey(scheme);
-                if (key != null)
-                {
-                    key.SetValue(string.Empty, "URL:" + scheme);
-                    key.SetValue("URL Protocol", string.Empty);
-
-                    RegistryKey shellKey = key.CreateSubKey("shell");
-                    if (shellKey != null)
-                    {
-                        RegistryKey openKey = shellKey.CreateSubKey("open");
-                        if (openKey != null)
-                        {
-                            RegistryKey commandKey = openKey.CreateSubKey("command");
-                            if (commandKey != null)
-                            {
-                                commandKey.SetValue(string.Empty, $"\"{applicationPath}\" \"%1\"");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Помилка: {ex.Message}");
-            }
+            auth.AuthMake();
         }
     }
 }

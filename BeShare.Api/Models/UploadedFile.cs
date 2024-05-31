@@ -8,5 +8,6 @@
         public string FileType { get; set; }
         public string UploadDate { get; set; }
         public User User { get; set; }
+        public string MD5Hash { get; set; }
     }
 }

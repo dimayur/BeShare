@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BeShare.App.Method;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace BeShare.App
 {
@@ -22,11 +11,24 @@ namespace BeShare.App
         public Panel()
         {
             InitializeComponent();
+            Auth auth = new Auth();
+
+            auth.userName = auth.ReadData();
+            this.DataContext = auth;
         }
 
         private void mediumSizeButtons_Loaded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            new FileManager().FileReadMake();
+        }
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

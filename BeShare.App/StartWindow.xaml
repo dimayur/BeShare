@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BeShare.App"
         mc:Ignorable="d"
-        Title="Authentication" Height="350" Width="500">
+        Title="Load" Height="350" Width="350" WindowStyle="None">
     <Grid>
-        <Button Content="Авторизуватися" Click="Open_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Height="314" Width="480"/>
+        <Grid>
+            <Image x:Name="gifImage" Stretch="None" Height="350" Width="350"/>
+            <TextBlock x:Name="textBlock" Text="Перевірка підключення" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Margin="0,285,0,0" FontWeight="Bold"/>
+            <Button Content="Button" HorizontalAlignment="Left" Margin="239,265,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        </Grid>
     </Grid>
 </Window>

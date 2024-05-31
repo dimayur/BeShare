@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using BeShare.Api.Models;
+using Microsoft.VisualBasic.FileIO;
 
 namespace BeShare.Api.Controllers
 {
@@ -40,23 +41,40 @@ namespace BeShare.Api.Controllers
             if (user == null)
                 return Unauthorized("Недійсний токен доступу");
 
-            var fileName = Guid.NewGuid().ToString();
-            var fileType = Path.GetExtension(file.FileName);
-            var fullFileName = fileName + fileType;
-            var filePath = Path.Combine("userfiles", fullFileName);
+            string md5Hash;
+            string fileName;
+            string fileType;
+            string fullFileName;
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            using (var memoryStream = new MemoryStream())
             {
-                await file.CopyToAsync(stream);
+                await file.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                md5Hash = CalculateMD5Hash(memoryStream);
+                memoryStream.Position = 0;
+
+                // Перевірка на чорний список
+                if (await IsFileBlacklisted(md5Hash))
+                    return BadRequest("Цей файл заборонено завантажувати");
+
+                fileName = Guid.NewGuid().ToString();
+                fileType = Path.GetExtension(file.FileName);
+                fullFileName = fileName + fileType;
+                var filePath = Path.Combine("userfiles", fullFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    memoryStream.CopyTo(stream);
+                }
             }
             string formattedDate = DateTime.Now.ToString("dd.MM.yyyy");
-
             var uploadedFile = new UploadedFile
             {
                 UserId = user.Id,
                 FileName = fullFileName,
                 FileType = fileType,
-                UploadDate = formattedDate
+                UploadDate = formattedDate, // Використовуємо DateTime без форматування
+                MD5Hash = md5Hash
             };
 
             _context.UploadedFiles.Add(uploadedFile);
@@ -84,6 +102,36 @@ namespace BeShare.Api.Controllers
 
             return Ok(files);
         }
+        
 
+        [HttpDelete("api/deletefile/{id}")]
+        public async Task<IActionResult> DeleteFile(string token, int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
+            if (user == null)
+                return Unauthorized("Недійсний токен доступу");
+            var file = await _context.UploadedFiles.FirstOrDefaultAsync(f => f.Id == id && f.UserId == user.Id);
+            if (file == null)
+                return NotFound("Файл не знайдено");
+            _context.UploadedFiles.Remove(file);
+            await _context.SaveChangesAsync();
+            return Ok("Файл успішно видалено");
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet]
+        public async Task<bool> IsFileBlacklisted(string md5Hash)
+        {
+            return await _context.BlacklistedFiles.AnyAsync(bf => bf.MD5Hash == md5Hash);
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost]
+        public string CalculateMD5Hash(Stream inputStream)
+        {
+            using (var md5 = System.Security.Cryptography.MD5.Create())
+            {
+                var hash = md5.ComputeHash(inputStream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
+        }
     }
 }
