@@ -41,26 +41,10 @@ namespace BeShare.Api.Controllers
             if (user == null)
                 return Unauthorized("Недійсний токен доступу");
 
-            string md5Hash;
-            string fileName;
-            string fileType;
-            string fullFileName;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                memoryStream.Position = 0;
-                md5Hash = CalculateMD5Hash(memoryStream);
-                memoryStream.Position = 0;
-
-                // Перевірка на чорний список
-                if (await IsFileBlacklisted(md5Hash))
-                    return BadRequest("Цей файл заборонено завантажувати");
-
-                fileName = Guid.NewGuid().ToString();
-                fileType = Path.GetExtension(file.FileName);
-                fullFileName = fileName + fileType;
-                var filePath = Path.Combine("userfiles", fullFileName);
+            var fileName = Guid.NewGuid().ToString();
+            var fileType = Path.GetExtension(file.FileName);
+            var fullFileName = fileName + fileType;
+            var filePath = Path.Combine("userfiles", fullFileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -82,8 +66,8 @@ namespace BeShare.Api.Controllers
 
             return Ok("Файл успішно завантажено");
         }
-        [HttpPost("api/getfiles")]
-        public async Task<IActionResult> GetFilesForUser(string token)
+        [HttpPost("getfiles")]
+        public async Task<IActionResult> GetUserFiles(string token)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
             if (user == null)
