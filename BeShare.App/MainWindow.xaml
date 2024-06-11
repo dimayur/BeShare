@@ -5,13 +5,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="MainWindow" Height="352" Width="306"
-    AllowDrop="True" Drop="MainWindow_Drop">
-
-    <Grid Height="324" VerticalAlignment="Top" Margin="0,10,0,0">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Label Content="Оберіть файли:"/>
-            <ListBox x:Name="fileListBox" SelectionMode="Multiple" Width="300" Height="150"/>
-            <Button Content="Архівувати" Click="CreateArchive_Click" Height="74"/>
-        </StackPanel>
-    </Grid>
+    AllowDrop="True" Drop="MainWindow_Drop" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Border CornerRadius="90" Background="White">
+        <Grid Height="324" VerticalAlignment="Top" Margin="0,10,0,0">
+            <Button Content="X" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Click="CloseButton_Click" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="261">
+                <Label Content="Оберіть файл:"/>
+                <ListBox x:Name="fileListBox" SelectionMode="Single" Width="260" Height="150"/>
+                <Button Content="Вибрати папку" Click="SelectFolderButton_Click" Height="30" Width="120"/>
+                <Button Content="Архівувати" Click="CreateArchive_Click" Height="74"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

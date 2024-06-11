@@ -84,7 +84,7 @@
                     <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Назва" Margin="15" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
                     <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Тип файлу" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
                     <TextBlock Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Дата завантаження" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
-                    <TextBlock Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Розмір" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
+                    <TextBlock Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Дія" FontWeight="SemiBold" Foreground="DarkSlateGray"/>
                     <Separator Grid.ColumnSpan="5" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="#F0F5F8"/>
                 </Grid>
 
@@ -92,25 +92,7 @@
                 <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False">
                     <StackPanel x:Name="Deamn" Orientation="Vertical">
                         <!-- Dynamically generated buttons with table content go here -->
-                        <Button Style="{DynamicResource ButtonStyle1}">
-                            <Button.Content>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Image Margin="5,0,0,0" Width="50" Stretch="Uniform" Source="/Custom Controls/music.png" HorizontalAlignment="Left"/>
-                                        <TextBlock Margin="5,0,0,0" Text="Файл 1" VerticalAlignment="Center" TextAlignment="Left" HorizontalAlignment="Left" FontWeight="Bold" Foreground="LightSlateGray"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="1" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="2" Text="Трав 10, 2020" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" Foreground="LightSlateGray"/>
-                                    <TextBlock Grid.Column="3" Text="1 Gb" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Center" Foreground="LightSlateGray"/>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
+                        
                     </StackPanel>
                 </ScrollViewer>
             </Grid>

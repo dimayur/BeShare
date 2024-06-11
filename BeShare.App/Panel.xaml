@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FileManagerUI"
         xmlns:ccontrols="clr-namespace:FileManagerUI.Custom_Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1200" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen">
+        Title="Головна" Height="539" Width="837" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="menuButtonTemplate" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle">
@@ -265,18 +265,24 @@
                     <!--#region Menu Grid-->
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="133*"/>
+                            <RowDefinition Height="Auto" MinHeight="40"/>
+                            <RowDefinition Height="107*"/>
+                            <RowDefinition Height="Auto" MinHeight="55"/>
+                            <RowDefinition Height="104*"/>
                         </Grid.RowDefinitions>
 
                         <!--Adding Menu buttons-->
-                        <Button Grid.Row="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}" Click="Button_Click">
+                        <Button Grid.Row="1" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}" Click="Button_Refresh" Margin="15,0,15,0">
+                            <Image Source="add.png" Stretch="Uniform" Width="40"/>
+                        </Button>
+                        <Button Grid.Row="2" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}" Click="Button_Click" Margin="15,56,15,11">
                             <Button.Content>
-                                <Image Source="/settings.png" Stretch="Uniform" Width="35"/>
+                                <Image Source="ref.png" Stretch="Uniform" Width="35"/>
                             </Button.Content>
                         </Button>
-                        <Button Grid.Row="5" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}" Click="Button_Click_1">
+
+                        <Button Grid.Row="4" Background="Transparent" BorderThickness="0" Style="{DynamicResource menuButtonTemplate}" Click="Button_Click_1" Margin="15,46,15,18">
                             <Button.Content>
                                 <Image Source="/close.png" Stretch="Uniform" Width="35"/>
                             </Button.Content>
@@ -294,48 +300,13 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="100"/>
-                                <RowDefinition Height="235*"/>
-                                <RowDefinition Height="99*"/>
+                                <RowDefinition Height="301*"/>
+                                <RowDefinition Height="122*"/>
+                                <RowDefinition Height="178*"/>
                             </Grid.RowDefinitions>
-
-                            <!--#region Left Grid-->
-
-                            <StackPanel Grid.Row="1" Grid.RowSpan="2">
-                                <TextBlock Text="Ваші сховища" FontSize="25" FontWeight="Bold" Foreground="DarkSlateGray" Margin="15,0,0,0"/>
-
-                                <Grid HorizontalAlignment="Left" Margin="35,15,0,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition Height="3*"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    
-                                </Grid>
-                                <Button Height="50" Margin="15,20,15,0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{DynamicResource buttonNormal}">
-                                    <Button.Content>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="70"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Border Grid.Column="0" Background="Transparent">
-                                                <Border BorderThickness="0" Background="#2B88C9" Height="30" Width="30" CornerRadius="5">
-                                                    <Image Width="25" Stretch="Uniform" Source="/plus.png"/>
-                                                </Border>
-                                            </Border>
-                                            <TextBlock Grid.Column="1" Text="Завантажити" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="15"/>
-                                        </Grid>
-                                    </Button.Content>
-                                </Button>
-                            </StackPanel>
-                            <!--#endregion-->
-
                             <!--#region Grid Center Page-->
-                            <Border Grid.Column="1" Grid.RowSpan="3" Background="Transparent" Visibility="{Binding Visibility}">
-                                <Border Background="#F3F6F9" CornerRadius="20" Margin="0,10,0,10">
+                            <Border Grid.RowSpan="4" Background="Transparent" Visibility="{Binding Visibility}" Grid.ColumnSpan="2" Margin="10,0,0,0">
+                                <Border Background="#F3F6F9" CornerRadius="20" Margin="0,10,10,10">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -365,13 +336,14 @@
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="*"/>
+                                                <RowDefinition/>
                                             </Grid.RowDefinitions>
 
                                             <!--#region My Files Section-->
                                             <Grid Grid.Row="1">
-                                                <TextBlock Text="Mої файли" FontWeight="Bold" Foreground="DarkSlateGray" VerticalAlignment="Top" Margin="15,-12,0,0" FontSize="25"/>
+                                                <TextBlock Text="Mої файли" FontWeight="Bold" Foreground="DarkSlateGray" VerticalAlignment="Top" Margin="28,-57,-13,0" FontSize="25"/>
                                             </Grid>
-                                            <ccontrols:FileListControl Grid.Row="2" Margin="15,15,15,10" />
+                                            <ccontrols:FileListControl Grid.Row="2" Margin="15,15,15,10" Grid.RowSpan="2" />
                                             <!--#endregion-->
                                         </Grid>
                                     </Grid>

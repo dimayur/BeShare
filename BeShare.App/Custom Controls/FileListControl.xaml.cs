@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,85 +21,229 @@ namespace FileManagerUI.Custom_Controls
     /// </summary>
     public partial class FileListControl : UserControl
     {
-        private void GenerateTable(List<FileData> files)
+        FileManager filesys = new FileManager();
+        public FileListControl()
         {
+            InitializeComponent();
+            LoadFiles();
+            filesys.FileReadMake();
+        }
+
+        private async Task DeleteFileAsync(int fileId)
+        {
+            string url = $"https://localhost:7147/Home/api/deletefile/{fileId}";
+            string token = new Auth().ReadToken();
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                MessageBox.Show("Токен порожній або відсутній.");
+                return;
+            }
+
+            using (var httpClient = new HttpClient())
+            {
+                url += "?token=" + token;
+                var response = await httpClient.DeleteAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Файл успішно видалено!");
+                }
+                else
+                {
+                    MessageBox.Show("Помилка під час видалення файлу: " + response.ReasonPhrase);
+                }
+            }
+        }
+        public async Task RefreshFiles()
+        {
+            Deamn.Children.Clear();
+            List<FileData> files = filesys.ReadFile();
+
             foreach (var file in files)
             {
-                var button = new Button();
-                button.Style = FindResource("ButtonStyle1") as Style;
+                Button button = new Button
+                {
+                    Style = (Style)FindResource("ButtonStyle1"),
+                    Content = CreateButtonContent(file),
+                    Tag = file
+                };
 
-                var grid = new Grid();
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(100) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(140) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(120) });
+                button.Click += FileButton_Click;
+                Deamn.Children.Add(button);
+            }
+            Deamn.InvalidateVisual();
+        }
+        public void LoadFiles()
+        {
+            List<FileData> files = filesys.ReadFile();
 
-                var stackPanel = new StackPanel();
-                stackPanel.Orientation = Orientation.Horizontal;
-                stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
-                stackPanel.VerticalAlignment = VerticalAlignment.Stretch;
+            foreach (var file in files)
+            {
+                Button button = new Button
+                {
+                    Style = (Style)FindResource("ButtonStyle1"),
+                    Content = CreateButtonContent(file),
+                    Tag = file
+                };
 
-                var image = new Image();
-                image.Margin = new Thickness(5, 0, 0, 0);
-                image.Width = 50;
-                image.Stretch = System.Windows.Media.Stretch.Uniform;
-                image.Source = new BitmapImage(new Uri("/Custom Controls/music.png", UriKind.Relative));
-                image.HorizontalAlignment = HorizontalAlignment.Left;
-
-                var textBlock1 = new TextBlock();
-                textBlock1.Margin = new Thickness(5, 0, 0, 0);
-                textBlock1.Text = file.FileName;
-                textBlock1.VerticalAlignment = VerticalAlignment.Center;
-                textBlock1.TextAlignment = TextAlignment.Left;
-                textBlock1.HorizontalAlignment = HorizontalAlignment.Left;
-                textBlock1.FontWeight = FontWeights.Bold;
-                textBlock1.Foreground = Brushes.LightSlateGray;
-
-                var textBlock2 = new TextBlock();
-                textBlock2.Text = file.Id.ToString();
-                textBlock2.VerticalAlignment = VerticalAlignment.Center;
-                textBlock2.TextAlignment = TextAlignment.Center;
-                textBlock2.HorizontalAlignment = HorizontalAlignment.Center;
-                textBlock2.Foreground = Brushes.LightSlateGray;
-
-                var textBlock3 = new TextBlock();
-                textBlock3.Text = file.UploadDate.ToString("MMM dd, yyyy");
-                textBlock3.VerticalAlignment = VerticalAlignment.Center;
-                textBlock3.TextAlignment = TextAlignment.Center;
-                textBlock3.HorizontalAlignment = HorizontalAlignment.Center;
-                textBlock3.Foreground = Brushes.LightSlateGray;
-
-                var textBlock4 = new TextBlock();
-                textBlock4.Text = file.Size;
-                textBlock4.VerticalAlignment = VerticalAlignment.Center;
-                textBlock4.TextAlignment = TextAlignment.Center;
-                textBlock4.HorizontalAlignment = HorizontalAlignment.Center;
-                textBlock4.Foreground = Brushes.LightSlateGray;
-
-                stackPanel.Children.Add(image);
-                stackPanel.Children.Add(textBlock1);
-
-                Grid.SetColumn(stackPanel, 0);
-                Grid.SetColumn(textBlock2, 1);
-                Grid.SetColumn(textBlock3, 2);
-                Grid.SetColumn(textBlock4, 3);
-
-                grid.Children.Add(stackPanel);
-                grid.Children.Add(textBlock2);
-                grid.Children.Add(textBlock3);
-                grid.Children.Add(textBlock4);
-
-                button.Content = grid;
-
-                // Додати кнопку до відповідного контейнера, наприклад, StackPanel чи Grid у вашому WPF-інтерфейсі
+                button.Click += FileButton_Click;
                 Deamn.Children.Add(button);
             }
         }
 
-        public FileListControl()
+        private void FileButton_Click(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            GenerateTable(new FileManager().ReadFile());
+            Button clickedButton = sender as Button;
+            FileData fileData = clickedButton.Tag as FileData;
+
+            if (fileData != null)
+            {
+                string url = $"http://localhost:3000/files/info/{fileData.Id}";
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+        }
+        private UIElement CreateButtonContent(FileData file)
+        {
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(100) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(140) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(120) });
+
+            StackPanel stackPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch
+            };
+
+            Image image = new Image
+            {
+                Margin = new Thickness(5, 0, 0, 0),
+                Width = 50,
+                Stretch = Stretch.Uniform,
+                Source = new BitmapImage(new Uri("folder.png", UriKind.Relative)),
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            stackPanel.Children.Add(image);
+
+            TextBlock fileNameTextBlock = new TextBlock
+            {
+                Margin = new Thickness(5, 0, 0, 0),
+                Text = file.FileName,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Left,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Colors.LightSlateGray)
+            };
+            stackPanel.Children.Add(fileNameTextBlock);
+
+            grid.Children.Add(stackPanel);
+            Grid.SetColumn(stackPanel, 0);
+
+            TextBlock idTextBlock = new TextBlock
+            {
+                Text = file.FileType,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.LightSlateGray)
+            };
+            grid.Children.Add(idTextBlock);
+            Grid.SetColumn(idTextBlock, 1);
+
+            TextBlock dateTextBlock = new TextBlock
+            {
+                Text = Convert.ToString(file.UploadDate),
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.LightSlateGray)
+            };
+            grid.Children.Add(dateTextBlock);
+            Grid.SetColumn(dateTextBlock, 2);
+
+            TextBlock sizeTextBlock = new TextBlock
+            {
+                Text = "1 Gb",
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.LightSlateGray)
+            };
+            grid.Children.Add(sizeTextBlock);
+            Grid.SetColumn(sizeTextBlock, 3);
+            Button actionButton = new Button
+            {
+                Content = "Видалити",
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(5),
+                Width = 70,
+                Height = 40,
+                Background = new SolidColorBrush(Color.FromRgb(221, 221, 221)),
+                Foreground = new SolidColorBrush(Colors.Black),
+                BorderBrush = new SolidColorBrush(Colors.Black),
+                BorderThickness = new Thickness(2),
+                FontSize = 14,
+            };
+
+            var style = new Style(typeof(Button));
+            var template = new ControlTemplate(typeof(Button));
+            var borderFactory = new FrameworkElementFactory(typeof(Border));
+            borderFactory.SetValue(Border.CornerRadiusProperty, new CornerRadius(15));
+            borderFactory.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Button.BackgroundProperty));
+            borderFactory.SetValue(Border.BorderBrushProperty, new TemplateBindingExtension(Button.BorderBrushProperty));
+            borderFactory.SetValue(Border.BorderThicknessProperty, new TemplateBindingExtension(Button.BorderThicknessProperty));
+
+            var contentPresenterFactory = new FrameworkElementFactory(typeof(ContentPresenter));
+            contentPresenterFactory.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            contentPresenterFactory.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
+
+            borderFactory.AppendChild(contentPresenterFactory);
+            template.VisualTree = borderFactory;
+
+            var mouseOverTrigger = new Trigger
+            {
+                Property = UIElement.IsMouseOverProperty,
+                Value = true
+            };
+            mouseOverTrigger.Setters.Add(new Setter(Button.BackgroundProperty, new SolidColorBrush(Color.FromRgb(170, 170, 170))));
+            template.Triggers.Add(mouseOverTrigger);
+
+            var isPressedTrigger = new Trigger
+            {
+                Property = Button.IsPressedProperty,
+                Value = true
+            };
+            isPressedTrigger.Setters.Add(new Setter(Button.BackgroundProperty, new SolidColorBrush(Color.FromRgb(136, 136, 136))));
+            template.Triggers.Add(isPressedTrigger);
+
+            style.Setters.Add(new Setter(Button.TemplateProperty, template));
+            actionButton.Style = style;
+            actionButton.Click += (sender, e) =>
+            {
+                e.Handled = true;
+                MessageBoxResult result = MessageBox.Show(
+            "Ви дійсно хочете видалити цей файл?",
+            "Підтвердження видалення",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    DeleteFileAsync(file.Id);
+                }
+            };
+            grid.Children.Add(actionButton);
+            Grid.SetColumn(actionButton, 4);
+
+            return grid;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BeShare.App.Method
 {
@@ -36,7 +37,7 @@ namespace BeShare.App.Method
             }
             catch (Exception ex)
             {
-                throw new Exception($"Помилка: {ex.Message}");
+                MessageBox.Show("Завантажте програму з правами адміністратора");
             }
         }
     }

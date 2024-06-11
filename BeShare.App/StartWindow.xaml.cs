@@ -21,62 +21,26 @@ namespace BeShare.App
         Auth auth = new Auth();
         private readonly string AuthorizationUrl = "http://localhost:3000/login";
         string applicationPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BeShare.App.exe");
-
-        private string[] texts = { "Перевірка сервера", "Проводим підключення", "Успішно!" };
-        private int currentIndex = 0;
-        private DispatcherTimer timer;
-
         public StartWindow()
         {
             InitializeComponent();
-            LoadGif();
-            CenterWindows();
-            wpf.RegisterProgram("beshare.app", applicationPath);
-            this.SizeToContent = SizeToContent.WidthAndHeight;
-            this.ResizeMode = ResizeMode.NoResize;
+            //wpf.RegisterProgram("beshare.app", applicationPath); 
             if (AppArgs.Args != null && AppArgs.Args.Length > 0)
             {
                 string url = AppArgs.Args[0];
                 ProcessUrl(url);
             }
-            
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(3);
-            timer.Tick += Timer_Tick;
-            timer.Start();
+        }
 
-        }
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            // Зміна тексту наступним за списком
-            textBlock.Text = texts[currentIndex];
-            currentIndex = (currentIndex + 1) % texts.Length;
-        }
+        //AuthStart();
+
+        //auth.AuthMake();
+
         public void CloseWindow()
         {
             Application.Current.MainWindow.Close();
         }
-        private void CenterWindows()
-        {
-            double screenWidth = SystemParameters.PrimaryScreenWidth;
-            double screenHeight = SystemParameters.PrimaryScreenHeight;
-            double windowWidth = this.Width;
-            double windowHeight = this.Height;
-            this.Left = (screenWidth - windowWidth) / 2;
-            this.Top = (screenHeight - windowHeight) / 2;
-        }
-        private void LoadGif() 
-        {
-            string imagePath = "/BeShare.App;component/Content/spin.gif";
 
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(imagePath, UriKind.Relative);
-            bitmap.EndInit();
-
-            gifImage.Source = bitmap;
-            ImageBehavior.SetAnimatedSource(gifImage, bitmap);
-        }
         public void AuthStart()
         {
             try
@@ -129,6 +93,12 @@ namespace BeShare.App
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //AuthStart();
+            //auth.AuthMake();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             auth.AuthMake();
         }

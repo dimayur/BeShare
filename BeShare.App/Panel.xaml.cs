@@ -1,5 +1,7 @@
 ﻿using BeShare.App.Method;
+using FileManagerUI.Custom_Controls;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace BeShare.App
 {
@@ -12,7 +14,6 @@ namespace BeShare.App
         {
             InitializeComponent();
             Auth auth = new Auth();
-
             auth.userName = auth.ReadData();
             this.DataContext = auth;
         }
@@ -22,9 +23,14 @@ namespace BeShare.App
 
         }
 
+        private void Button_Refresh(object sender, RoutedEventArgs e)
+        {
+            
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            new FileManager().FileReadMake();
+            MainWindow addfiles = new MainWindow();
+            addfiles.Show();
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {

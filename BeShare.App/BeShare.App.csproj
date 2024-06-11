@@ -6,13 +6,17 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Content\beshare__NVh_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="close.png" />
     <None Remove="close1.png" />
     <None Remove="cloud.png" />
-    <None Remove="Content\spin.gif" />
+    <None Remove="Content\add.png" />
+    <None Remove="Content\ref.png" />
+    <None Remove="Content\zip.png" />
+    <None Remove="Custom Controls\folder.png" />
     <None Remove="Custom Controls\music.png" />
     <None Remove="dropbox.png" />
     <None Remove="plus.png" />
@@ -20,8 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Content\beshare__NVh_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="close.png" />
-    <Resource Include="Content\spin.gif" />
+    <Resource Include="add.png" />
+    <Resource Include="Custom Controls\folder.png" />
+    <Resource Include="ref.png" />
+    <Resource Include="Content\zip.png" />
     <Resource Include="Custom Controls\music.png" />
     <Resource Include="plus.png" />
     <Resource Include="settings.png" />

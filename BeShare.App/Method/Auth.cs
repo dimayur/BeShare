@@ -19,6 +19,7 @@ namespace BeShare.App.Method
         {
             using var client = new HttpClient();
             client.BaseAddress = new Uri("https://localhost:7147");
+            MessageBox.Show("1");
             string token = ReadToken();
             try
             {
@@ -73,6 +74,11 @@ namespace BeShare.App.Method
             try
             {
                 string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "beshare.app", "token.txt");
+                if (!File.Exists(filePath))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                    File.WriteAllText(filePath, string.Empty, Encoding.UTF8);
+                }
                 return File.ReadAllText(filePath, Encoding.UTF8);
             }
             catch (Exception ex)

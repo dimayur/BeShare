@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Windows;
 using Newtonsoft.Json;
 
 namespace BeShare.App.Method
@@ -13,21 +14,20 @@ namespace BeShare.App.Method
         public int Id { get; set; }
         public string FileName { get; set; }
         public string FileType { get; set; }
-        public DateTime UploadDate { get; set; }
-        public string Size { get; set; }
+        public DateTime UploadDate { get; set; } 
     }
     internal class FileManager
     {
+
         public async void FileReadMake()
         {
             string token = new Auth().ReadToken();
 
             using var client = new HttpClient();
             client.BaseAddress = new Uri("https://localhost:7147");
-
             try
             {
-                HttpResponseMessage response = await client.PostAsync($"/Home/api/getfiles?token={token}", null);
+                HttpResponseMessage response = await client.PostAsync($"/Home/getfiles?token={token}", null);
 
                 if (response.IsSuccessStatusCode)
                 {

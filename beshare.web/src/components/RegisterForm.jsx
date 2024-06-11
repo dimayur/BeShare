@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../css/auth.css';
 
 const RegisterForm = () => {
     const [username, setUsername] = useState('');
@@ -23,24 +24,33 @@ const RegisterForm = () => {
     };
 
     return (
-        <div>
-            <h2>Реєстрація</h2>
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Ім'я користувача:</label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <div className="app-container">
+            <div className="app-info">
+                <div className="app-menu-r">
+                    <img src="/contnet/img/img.svg" alt=""/>
                 </div>
-                <div>
-                    <label>Пароль:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <div className="app-menu-s">
+                    <h1 className="txt-main">Реєстрація</h1>
+                    <div className="inp-help">
+                        <form onSubmit={handleSubmit}>
+                            <div className="inp-info">
+                                <label className="txt-normal">Ім'я користувача</label>
+                                <input className="inp-grid" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                            </div>
+                            <div className="inp-info">
+                                <label className="txt-normal">Почта</label>
+                                <input className="inp-grid" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                            </div>
+                            <div className="inp-info">
+                                <label className="txt-normal">Пароль</label>
+                                <input className="inp-grid" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                            </div>
+
+                            <button className="btn" type="submit">Стоврити</button>
+                        </form>
+                    </div>
                 </div>
-                <div>
-                    <label>Email:</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <button type="submit">Зареєструватися</button>
-            </form>
+            </div>
         </div>
     );
 };

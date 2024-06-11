@@ -19,8 +19,12 @@ namespace BeShare.Api.Controllers
             _jwtSecret = configuration["Jwt:Secret"];
         }
         [HttpPost("api/blacklist/add")]
-        public async Task<IActionResult> AddToBlacklist(string md5Hash, string reason)
+        public async Task<IActionResult> AddToBlacklist(string token, string md5Hash, string reason)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
+            if (user == null || !user.IsAdmin)
+                return Unauthorized("Недійсний токен доступу або у вас немає прав адміністратора");
+
             if (string.IsNullOrEmpty(md5Hash))
                 return BadRequest("MD5 хеш не може бути порожнім");
 
@@ -41,10 +45,32 @@ namespace BeShare.Api.Controllers
 
             return Ok("Файл успішно додано до чорного списку");
         }
-        [HttpGet("api/blacklist/get")]
-        public async Task<IActionResult> GetBlacklistedFiles()
+
+        [HttpPost("api/blacklist/delete")]
+        public async Task<IActionResult> RemoveFromBlacklist(string token, int fileId)
         {
-            var blacklistedFiles = await _context.BlacklistedFiles.Select(bf => new { bf.Id, bf.MD5Hash }).ToListAsync();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
+            if (user == null || !user.IsAdmin)
+                return Unauthorized("Недійсний токен доступу або у вас немає прав адміністратора");
+
+            var blacklistedFile = await _context.BlacklistedFiles.FindAsync(fileId);
+            if (blacklistedFile == null)
+                return NotFound("Файл не знайдено в чорному списку");
+
+            _context.BlacklistedFiles.Remove(blacklistedFile);
+            await _context.SaveChangesAsync();
+
+            return Ok("Файл успішно видалено з чорного списку");
+        }
+
+        [HttpGet("api/blacklist/get")]
+        public async Task<IActionResult> GetBlacklistedFiles(string token)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Token == token);
+            if (user == null || !user.IsAdmin)
+                return Unauthorized("Недійсний токен доступу або у вас немає прав адміністратора");
+
+            var blacklistedFiles = await _context.BlacklistedFiles.Select(bf => new { bf.Id, bf.MD5Hash, bf.Reason }).ToListAsync();
 
             return Ok(blacklistedFiles);
         }

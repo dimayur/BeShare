@@ -65,7 +65,24 @@ namespace BeShare.Api.Controllers
 
             return Ok(new { Token = token });
         }
+        [HttpPost("a_login")]
+        public async Task<IActionResult> ALogin(LoginDto model)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == model.Username);
 
+            if (user == null || !VerifyPassword(model.Password, user.PasswordHash))
+            {
+                return Unauthorized("Невірне ім'я користувача або пароль");
+            }
+
+            var token = GenerateJwtToken(user);
+            user.Token = token;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Token = token, IsAdmin = user.IsAdmin });
+        }
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
@@ -92,7 +109,7 @@ namespace BeShare.Api.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Username)
                 }),
-                Expires = DateTime.UtcNow.AddHours(4), // ПОМІНЯЙ ВСЕ НАЗАД 
+                Expires = DateTime.UtcNow.AddHours(24), // ПОМІНЯЙ ВСЕ НАЗАД 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

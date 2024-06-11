@@ -36,15 +36,18 @@ const LoginForm = () => {
                     <h1 className="txt-main">Авторизація</h1>
                     <div className="inp-help">
                         <form onSubmit={handleSubmit}>
-                        <div className="inp-info">
-                            <label className="txt-normal">Логін</label>
-                            <input className="inp-grid" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                        </div>
-                        <div className="inp-info">
-                            <label className="txt-normal">Пароль</label>
-                            <input className="inp-grid" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        </div>
-                        <button className="btn" type="submit">Увійти</button>
+                            <div className="inp-info">
+                                <label className="txt-normal">Логін</label>
+                                <input className="inp-grid" type="text" value={username}
+                                       onChange={(e) => setUsername(e.target.value)}/>
+                            </div>
+                            <div className="inp-info">
+                                <label className="txt-normal">Пароль</label>
+                                <input className="inp-grid" type="password" value={password}
+                                       onChange={(e) => setPassword(e.target.value)}/>
+                            </div>
+                            <button className="btn" type="submit">Увійти</button>
+                            <a href="/register" className="register-link">Створити аккаунт</a>
                         </form>
                     </div>
                 </div>
